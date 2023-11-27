@@ -1,5 +1,7 @@
 package dev.coderpwh.sparkapidesk.config
 
+import kotlinx.serialization.Serializable
+
 /**
  * @Auther: pangwenhao
  * @Date: 2023/11/27 16:58
@@ -13,6 +15,7 @@ object ApiConfig {
     }
 }
 
+@Serializable
 data class ApiConfigModel(
     val appId:String,
     val appSecret:String,
