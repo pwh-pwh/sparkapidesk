@@ -1,6 +1,10 @@
 package dev.coderpwh.sparkapidesk.config
 
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import java.io.File
+import java.nio.file.Files
+import java.nio.file.Path
 
 /**
  * @Auther: pangwenhao
@@ -11,6 +15,17 @@ object ApiConfig {
     var config:ApiConfigModel? = null
     //todo
     fun initConfig() {
+        File("config.json").let {
+            if (it.exists()) {
+                it.readText().let {
+                    jsonStr ->
+                    config = Json.decodeFromString(jsonStr)
+                }
+            }
+        }
+    }
+
+    fun writeConfig() {
 
     }
 }
