@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import dev.coderpwh.sparkapidesk.components.About
+import dev.coderpwh.sparkapidesk.components.KeyConfigDialog
 import dev.coderpwh.sparkapidesk.screen.ChatScreen
 
 @Composable
@@ -34,16 +35,11 @@ fun main() = application {
             mutableStateOf(false)
         }
 
-        Dialog(
-            onCloseRequest = {
-                alertDialog = false
-            },
-            visible = alertDialog,
-            state = rememberDialogState(size = DpSize(400.dp, 300.dp)),
-            title = "set key"
-        ) {
-            Text("dialog demo")
-        }
+        val trayState = rememberTrayState()
+
+        KeyConfigDialog(alertDialog,{
+            alertDialog = false
+        },trayState)
         About(aboutDialog) { aboutDialog = false }
         MenuBar {
             Menu("me") {
@@ -65,7 +61,8 @@ fun main() = application {
             onAction = {
                 windowShow = true
             },
-            tooltip = "spark apidesk"
+            tooltip = "spark apidesk",
+            state = trayState
         )
         App()
     }
