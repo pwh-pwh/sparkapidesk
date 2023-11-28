@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import dev.coderpwh.sparkapidesk.components.About
 import dev.coderpwh.sparkapidesk.components.KeyConfigDialog
+import dev.coderpwh.sparkapidesk.config.ApiConfig
 import dev.coderpwh.sparkapidesk.screen.ChatScreen
 
 @Composable
@@ -23,23 +24,25 @@ fun App() {
 }
 
 fun main() = application {
+    //init config
+    ApiConfig.initConfig()
     var windowShow by remember { mutableStateOf(true) }
-    Window(onCloseRequest = { windowShow = false },
+    Window(
+        onCloseRequest = { windowShow = false },
         visible = windowShow,
         icon = painterResource("img.png"),
-        title = "spark apidesk",) {
-        var alertDialog by rememberSaveable{
+        title = "spark apidesk",
+    ) {
+        var alertDialog by rememberSaveable {
             mutableStateOf(false)
         }
-        var aboutDialog by rememberSaveable{
+        var aboutDialog by rememberSaveable {
             mutableStateOf(false)
         }
-
         val trayState = rememberTrayState()
-
-        KeyConfigDialog(alertDialog,{
+        KeyConfigDialog(alertDialog, {
             alertDialog = false
-        },trayState)
+        }, trayState)
         About(aboutDialog) { aboutDialog = false }
         MenuBar {
             Menu("me") {

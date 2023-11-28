@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Notification
 import androidx.compose.ui.window.TrayState
 import androidx.compose.ui.window.rememberNotification
-import androidx.compose.ui.window.rememberTrayState
+import dev.coderpwh.sparkapidesk.config.ApiConfig
+import dev.coderpwh.sparkapidesk.config.ApiConfigModel
 
 /**
  * @Auther: pangwenhao
@@ -100,6 +101,8 @@ fun KeyForm(trayState:TrayState) {
                         trayState.sendNotification(errNotification)
                       } else {
                           trayState.sendNotification(sucNotification)
+                          ApiConfig.config = ApiConfigModel(appId,appKey,appSecret)
+                          ApiConfig.writeConfig(ApiConfig.config!!)
                       }
             },
             modifier = Modifier.fillMaxWidth()
