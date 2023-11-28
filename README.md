@@ -12,4 +12,4 @@
 ## 系统支持
 1. windows
 2. linux(todo)
-3. macos(todo)
+3. macos
