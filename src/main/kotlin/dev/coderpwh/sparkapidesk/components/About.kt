@@ -14,6 +14,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogWindow
+import androidx.compose.ui.window.DialogWindowScope
 import androidx.compose.ui.window.rememberDialogState
 
 /**
@@ -24,37 +26,45 @@ import androidx.compose.ui.window.rememberDialogState
 
 @Composable
 fun About(isShow:Boolean,onCloseRequest:()->Unit) {
-    Dialog(
-        visible = isShow,
-        onCloseRequest = onCloseRequest,
-        title = "About",
+    //显示简介
+    DialogWindow(onCloseRequest = onCloseRequest,
         state = rememberDialogState(size = DpSize(400.dp, 300.dp)),
-    ) {
+        visible = isShow,
+        title = "About",
+        ) {
         Column {
             Row(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
-                Image(painter = painterResource("img.png"), contentDescription = "img", modifier = Modifier.size(40.dp))
+                Image(
+                    painter = painterResource("img.png"),
+                    contentDescription = "img",
+                    modifier = Modifier.size(40.dp)
+                )
                 Spacer(modifier = Modifier.width(20.dp))
                 Text(text = "spark apidesk", modifier = Modifier.align(alignment = Alignment.CenterVertically))
             }
             //显示简介
-            TextField(value = "使用sparkapi进行接口对接的桌面端应用", onValueChange = {}, readOnly = true,
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent, focusedIndicatorColor = Color.Transparent, unfocusedIndicatorColor = Color.Transparent),
-                )
+            TextField(
+                value = "使用sparkapi进行接口对接的桌面端应用", onValueChange = {}, readOnly = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                ),
+            )
             Spacer(modifier = Modifier.height(20.dp))
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(text = "Author: coderpwh", modifier = Modifier.align(alignment = Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(20.dp))
-                LinkButton("https://github.com/pwh-pwh","github")
+                LinkButton("https://github.com/pwh-pwh", "github")
             }
             Spacer(modifier = Modifier.height(2.dp))
             Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text(text = "Code: sparkapidesk", modifier = Modifier.align(alignment = Alignment.CenterVertically))
                 Spacer(modifier = Modifier.width(20.dp))
-                LinkButton("https://github.com/pwh-pwh/sparkapidesk","sparkapidesk")
+                LinkButton("https://github.com/pwh-pwh/sparkapidesk", "sparkapidesk")
             }
         }
-
     }
 }

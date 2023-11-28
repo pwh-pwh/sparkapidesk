@@ -4,9 +4,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.TrayState
-import androidx.compose.ui.window.rememberDialogState
+import androidx.compose.ui.window.*
 
 /**
  * @Auther: pangwenhao
@@ -16,12 +14,11 @@ import androidx.compose.ui.window.rememberDialogState
 
 @Composable
 fun KeyConfigDialog(alertDialog:Boolean,onCloseRequest:()->Unit,trayState: TrayState) {
-    Dialog(
-        onCloseRequest = onCloseRequest,
-        visible = alertDialog,
+    DialogWindow(onCloseRequest = onCloseRequest,
         state = rememberDialogState(size = DpSize(400.dp, 300.dp)),
-        title = "set key"
-    ) {
+        visible = alertDialog,
+        title = "set key",
+         ) {
         KeyForm(trayState)
     }
 }
