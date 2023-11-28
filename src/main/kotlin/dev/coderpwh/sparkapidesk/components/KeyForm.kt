@@ -101,7 +101,7 @@ fun KeyForm(trayState:TrayState) {
                         trayState.sendNotification(errNotification)
                       } else {
                           trayState.sendNotification(sucNotification)
-                          ApiConfig.config = ApiConfigModel(appId,appKey,appSecret)
+                          ApiConfig.config = ApiConfigModel(appId,appSecret,appKey)
                           ApiConfig.writeConfig(ApiConfig.config!!)
                       }
             },
