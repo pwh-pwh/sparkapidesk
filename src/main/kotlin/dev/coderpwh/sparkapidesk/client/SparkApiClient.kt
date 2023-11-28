@@ -114,6 +114,7 @@ class SparkApiClient {
             send(reqJson.toByteArray())
             while (true) {
                 val message = incoming.receive() as? Frame.Text ?: continue
+                println(message.readText())
                 val resp = json.decodeFromString<RespPayload>(message.readText())
                 if(msgList.last().id == resp.header.sid) {
                     var last = msgList.last()
