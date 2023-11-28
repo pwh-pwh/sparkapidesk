@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.coderpwh.sparkapidesk.client.SparkApiClient
 import dev.coderpwh.sparkapidesk.pojo.Message
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -41,11 +43,8 @@ fun ChatScreen() {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        var msgList = remember {
+        var msgList: SnapshotStateList<Message> = remember {
             mutableStateListOf(
-                Message("aa", "你好gpt", Date(), "user"),
-                Message("bb", "你好user", Date(), "gpt"),
-                Message("cc", "你好", Date(), "gpt"),
             )
         }
         var textFieldState by remember {
@@ -81,7 +80,8 @@ fun ChatScreen() {
                 msgList.add(Message(UUID.randomUUID().toString(), textFieldState, Date(), "user"))
                 textFieldState = ""
                 scope.launch {
-                    rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 1)
+                    SparkApiClient().simpleChat(msgList)
+                    rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
                 }
             }) {
                 Text("Send")
@@ -99,7 +99,7 @@ fun ShowMessage(msgList:List<Message>,modifier: Modifier,state:LazyListState) {
     ) {
         items(items = msgList) {
             msg ->
-            if (msg.sender == "gpt") {
+            if (msg.sender == "assistant") {
                 MessageLeft(msg)
             } else {
                 MessageRight(msg)
@@ -125,7 +125,7 @@ fun MessageLeft(msg:Message) {
         )
         Spacer(modifier = Modifier.width(10.dp))
         var isExpanded by remember {
-            mutableStateOf(false)
+            mutableStateOf(true)
         }
         Column {
             Text(text = msg.sender,
@@ -140,10 +140,11 @@ fun MessageLeft(msg:Message) {
                     Text(
                         text = msg.content,
                         modifier = Modifier
+                            .selectable(true) {
+
+                            }
                             .clickable {
                                 isExpanded = !isExpanded
-                            }.selectable(true) {
-
                             },
                         maxLines = if (isExpanded) Int.MAX_VALUE else 1,
                         style = MaterialTheme.typography.body1,

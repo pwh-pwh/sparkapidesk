@@ -1,5 +1,7 @@
 package dev.coderpwh.sparkapidesk.pojo
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import dev.coderpwh.sparkapidesk.entity.req.Text
 import java.util.Date
 
 /**
@@ -9,7 +11,16 @@ import java.util.Date
  */
 data class Message(
     val id: String,
-    val content: String,
-    val createTime: Date,
-    val sender: String
+    var content: String,
+    var createTime: Date,
+    var sender: String
 )
+
+fun SnapshotStateList<Message>.toTextList():List<Text> {
+    return map {
+        Text(
+            role = it.sender,
+            content = it.content
+        )
+    }
+}
