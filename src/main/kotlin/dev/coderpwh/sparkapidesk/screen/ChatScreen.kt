@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.key.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -62,12 +63,24 @@ fun ChatScreen() {
                 value = textFieldState,
                 onValueChange = { textFieldState = it },
                 label = { Text("Message") },
-                modifier = Modifier.weight(1f),
-                keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Send),
-                keyboardActions = KeyboardActions(onSend = {
-                    msgList.add(Message(UUID.randomUUID().toString(), textFieldState, Date(), "user"))
-                    textFieldState = ""
-                }),
+                modifier = Modifier.weight(1f).onPreviewKeyEvent {
+                    when {
+                        (it.key == Key.Enter && it.type == KeyEventType.KeyDown) -> {
+                            msgList.add(Message(UUID.randomUUID().toString(), textFieldState, Date(), "user"))
+                            textFieldState = ""
+                            scope.launch {
+                                try {
+                                    SparkApiClient().simpleChat(msgList)
+                                    rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
+                                } catch (e: Exception) {
+                                    msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
+                                }
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     backgroundColor = MaterialTheme.colors.surface
                 )
@@ -80,10 +93,14 @@ fun ChatScreen() {
                 msgList.add(Message(UUID.randomUUID().toString(), textFieldState, Date(), "user"))
                 textFieldState = ""
                 scope.launch {
-                    SparkApiClient().simpleChat(msgList)
-                    rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
+                    try {
+                        SparkApiClient().simpleChat(msgList)
+                        rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
+                    } catch (e: Exception) {
+                        msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
+                    }
                 }
-            }) {
+            }, modifier = Modifier.height(60.dp).padding(top = 9.dp)) {
                 Text("Send")
             }
         }
@@ -202,7 +219,7 @@ fun MessageRight(msg:Message) {
         }
         Spacer(modifier = Modifier.height(10.dp))
         Image(
-            painter = painterResource("user.jpg"),
+            painter = painterResource("user1.jpg"),
             contentDescription = "user头像",
             modifier = Modifier
                 .size(40.dp)

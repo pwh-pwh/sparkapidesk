@@ -15,7 +15,7 @@ import androidx.compose.ui.window.*
 @Composable
 fun KeyConfigDialog(alertDialog:Boolean,onCloseRequest:()->Unit,trayState: TrayState) {
     DialogWindow(onCloseRequest = onCloseRequest,
-        state = rememberDialogState(size = DpSize(400.dp, 300.dp)),
+        state = rememberDialogState(size = DpSize(400.dp, 350.dp)),
         visible = alertDialog,
         title = "set key",
          ) {
