@@ -13,11 +13,19 @@ data class Message(
     val id: String,
     var content: String,
     var createTime: Date,
-    var sender: String
+    var sender: String,
+    var type: MessageType = MessageType.AssistantMessage
 )
 
+enum class MessageType {
+    SysMessage,
+    AssistantMessage
+}
+
 fun SnapshotStateList<Message>.toTextList():List<Text> {
-    return map {
+    return filter {
+        it.type != MessageType.SysMessage
+    }.map {
         Text(
             role = it.sender,
             content = it.content

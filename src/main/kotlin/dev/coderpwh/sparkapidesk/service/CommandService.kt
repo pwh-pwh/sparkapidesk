@@ -2,6 +2,7 @@ package dev.coderpwh.sparkapidesk.service
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import dev.coderpwh.sparkapidesk.pojo.Message
+import dev.coderpwh.sparkapidesk.pojo.MessageType
 import java.util.*
 
 /**
@@ -18,7 +19,7 @@ class CommandService {
                 true
             }
             "/help" -> {
-                msgList.add(Message(UUID.randomUUID().toString(),"/clear: 清空聊天记录\n/help: 帮助", Date(),"assistant"))
+                msgList.add(Message(UUID.randomUUID().toString(),"/clear: 清空聊天记录\n/help: 帮助", Date(),"assistant",MessageType.SysMessage))
                 true
             }
             else -> {

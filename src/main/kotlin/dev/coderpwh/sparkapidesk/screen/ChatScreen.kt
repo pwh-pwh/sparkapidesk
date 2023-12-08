@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.coderpwh.sparkapidesk.client.SparkApiClient
 import dev.coderpwh.sparkapidesk.pojo.Message
+import dev.coderpwh.sparkapidesk.pojo.MessageType
 import dev.coderpwh.sparkapidesk.service.CommandService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,10 +56,14 @@ fun ChatScreen() {
         var cmdService = CommandService()
         var scope = rememberCoroutineScope()
         var rememberLazyListState = rememberLazyListState()
-        ShowMessage(msgList, modifier = Modifier.align(Alignment.TopCenter)
-            .fillMaxHeight(0.85f),state = rememberLazyListState)
-        Row(modifier = Modifier.padding(8.dp)
-            .align(Alignment.BottomCenter).fillMaxWidth()) {
+        ShowMessage(
+            msgList, modifier = Modifier.align(Alignment.TopCenter)
+                .fillMaxHeight(0.85f), state = rememberLazyListState
+        )
+        Row(
+            modifier = Modifier.padding(8.dp)
+                .align(Alignment.BottomCenter).fillMaxWidth()
+        ) {
 
             // 输入框
             OutlinedTextField(
@@ -75,11 +80,20 @@ fun ChatScreen() {
                                     SparkApiClient(cmdService).simpleChat(msgList)
                                     rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
                                 } catch (e: Exception) {
-                                    msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
+                                    msgList.add(
+                                        Message(
+                                            UUID.randomUUID().toString(),
+                                            e.toString(),
+                                            Date(),
+                                            "assistant",
+                                            MessageType.SysMessage
+                                        )
+                                    )
                                 }
                             }
                             true
                         }
+
                         else -> false
                     }
                 },
@@ -99,7 +113,15 @@ fun ChatScreen() {
                         SparkApiClient(cmdService).simpleChat(msgList)
                         rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
                     } catch (e: Exception) {
-                        msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
+                        msgList.add(
+                            Message(
+                                UUID.randomUUID().toString(),
+                                e.toString(),
+                                Date(),
+                                "assistant",
+                                MessageType.SysMessage
+                            )
+                        )
                     }
                 }
             }, modifier = Modifier.height(60.dp).padding(top = 9.dp)) {
@@ -112,12 +134,11 @@ fun ChatScreen() {
 }
 
 @Composable
-fun ShowMessage(msgList:List<Message>,modifier: Modifier,state:LazyListState) {
+fun ShowMessage(msgList: List<Message>, modifier: Modifier, state: LazyListState) {
     LazyColumn(
         modifier = modifier, state = state
     ) {
-        items(items = msgList) {
-            msg ->
+        items(items = msgList) { msg ->
             if (msg.sender == "assistant") {
                 MessageLeft(msg)
             } else {
@@ -128,12 +149,12 @@ fun ShowMessage(msgList:List<Message>,modifier: Modifier,state:LazyListState) {
 }
 
 @Composable
-fun MessageLeft(msg:Message) {
+fun MessageLeft(msg: Message) {
     Row(
         modifier = Modifier.padding(all = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
-    ){
+    ) {
         Image(
             painter = painterResource("gpt.png"),
             contentDescription = "gpt头像",
@@ -147,9 +168,11 @@ fun MessageLeft(msg:Message) {
             mutableStateOf(true)
         }
         Column {
-            Text(text = msg.sender,
+            Text(
+                text = msg.sender,
                 color = MaterialTheme.colors.secondary,
-                style = MaterialTheme.typography.body2)
+                style = MaterialTheme.typography.body2
+            )
             Spacer(modifier = Modifier.height(10.dp))
             Surface(
                 shape = RectangleShape,
@@ -177,7 +200,7 @@ fun MessageLeft(msg:Message) {
 }
 
 @Composable
-fun MessageRight(msg:Message) {
+fun MessageRight(msg: Message) {
     Row(
         modifier = Modifier
             .padding(10.dp)
