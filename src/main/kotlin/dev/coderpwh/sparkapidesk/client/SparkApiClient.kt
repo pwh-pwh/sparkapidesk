@@ -5,6 +5,7 @@ import dev.coderpwh.sparkapidesk.config.ApiConfig
 import dev.coderpwh.sparkapidesk.entity.req.*
 import dev.coderpwh.sparkapidesk.entity.resp.RespPayload
 import dev.coderpwh.sparkapidesk.pojo.toTextList
+import dev.coderpwh.sparkapidesk.service.CommandService
 import io.ktor.client.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.http.*
@@ -25,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec
  * @Date: 2023/11/28 09:33
  * @Description:
  */
-class SparkApiClient {
+class SparkApiClient(val cmdService: CommandService) {
     val client = HttpClient {
         install(WebSockets)
     }
@@ -105,6 +106,9 @@ class SparkApiClient {
     }
 
     suspend fun simpleChat(msgList:SnapshotStateList<dev.coderpwh.sparkapidesk.pojo.Message>){
+        if (cmdService.doDispatch(msgList)) {
+            return
+        }
         client.webSocket(
             method = HttpMethod.Get,
             host = "${SparkApiClient.host}",
@@ -142,7 +146,7 @@ class SparkApiClient {
 
 fun main() {
     ApiConfig.initConfig()
-    var sparkApiClient = SparkApiClient()
+    var sparkApiClient = SparkApiClient(CommandService())
     var req = ReqPayload(
         header = Header(
             ApiConfig.config!!.appId,

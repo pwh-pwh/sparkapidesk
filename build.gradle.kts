@@ -36,7 +36,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb,TargetFormat.Exe)
             packageName = "sparkapidesk"
-            packageVersion = "1.0.3"
+            packageVersion = "1.0.4"
         }
     }
 }

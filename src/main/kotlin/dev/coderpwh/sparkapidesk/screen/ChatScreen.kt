@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.coderpwh.sparkapidesk.client.SparkApiClient
 import dev.coderpwh.sparkapidesk.pojo.Message
+import dev.coderpwh.sparkapidesk.service.CommandService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,6 +52,7 @@ fun ChatScreen() {
         var textFieldState by remember {
             mutableStateOf("")
         }
+        var cmdService = CommandService()
         var scope = rememberCoroutineScope()
         var rememberLazyListState = rememberLazyListState()
         ShowMessage(msgList, modifier = Modifier.align(Alignment.TopCenter)
@@ -70,7 +72,7 @@ fun ChatScreen() {
                             textFieldState = ""
                             scope.launch {
                                 try {
-                                    SparkApiClient().simpleChat(msgList)
+                                    SparkApiClient(cmdService).simpleChat(msgList)
                                     rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
                                 } catch (e: Exception) {
                                     msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
@@ -94,7 +96,7 @@ fun ChatScreen() {
                 textFieldState = ""
                 scope.launch {
                     try {
-                        SparkApiClient().simpleChat(msgList)
+                        SparkApiClient(cmdService).simpleChat(msgList)
                         rememberLazyListState.animateScrollToItem(rememberLazyListState.firstVisibleItemIndex + 2)
                     } catch (e: Exception) {
                         msgList.add(Message(UUID.randomUUID().toString(), e.toString(), Date(), "assistant"))
