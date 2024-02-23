@@ -33,7 +33,7 @@ class SparkApiClient(val cmdService: CommandService) {
 
     companion object {
         val host = "spark-api.xf-yun.com"
-        val v3ApiPath = "/v3.1/chat"
+        val v3ApiPath = "/v3.5/chat"
         val json = Json {
             ignoreUnknownKeys = true
         }
@@ -154,7 +154,7 @@ fun main() {
         ),
         parameter = Parameter(
             chat = Chat(
-                "generalv3",
+                "generalv3.5",
             )
         ),
         payload = Payload(
@@ -162,7 +162,7 @@ fun main() {
                 text = listOf(
                     Text(
                         role = "user",
-                        content = "你好"
+                        content = "介绍你自己和你的模型版本"
                     )
                 )
             )

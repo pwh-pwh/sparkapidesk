@@ -24,7 +24,7 @@ data class ReqPayload(
                 ),
                 parameter = Parameter(
                     chat = Chat(
-                        "generalv3",
+                        "generalv3.5",
                     )
                 ),
                 payload = Payload(
