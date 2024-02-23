@@ -19,6 +19,7 @@ class CommandService {
                 true
             }
             "/help" -> {
+                last.type = MessageType.SysMessage
                 msgList.add(Message(UUID.randomUUID().toString(),"/clear: 清空聊天记录\n/help: 帮助", Date(),"assistant",MessageType.SysMessage))
                 true
             }
